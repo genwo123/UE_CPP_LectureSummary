@@ -23,11 +23,17 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	UPROPERTY(EditAnywhere)
-	int32 MyInt = 99;
+	// 이전까지 사용한 코드 삭제 대신 주속으로 처리함
+	// UPROPERTY(EditAnywhere)
+	// FVector MyVector = FVector(-13700.0,-3100.0,4056);
+
+	UPROPERTY(EditAnywhere, Category="Boving Platform")
+	FVector PlatformVelocity = FVector(100,0,0);
+
+	UPROPERTY(EditAnywhere, Category="Boving Platform")
+	float MoveDistance = 500;
 
 
-	UPROPERTY(EditAnywhere)
-	bool GunChk = false;
 
+	FVector StartLocation;
 };
