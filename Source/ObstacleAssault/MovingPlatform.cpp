@@ -8,7 +8,7 @@ AMovingPlatform::AMovingPlatform()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
+	
 }
 
 // Called when the game starts or when spawned
@@ -17,12 +17,25 @@ void AMovingPlatform::BeginPlay()
 	Super::BeginPlay();
 	
 	StartLocation = GetActorLocation();
+
+	//FVector와 유사한 FString 
+	FString Name = GetName();
+	//UE_LOG(LogTemp, Display, TEXT("Begin Play : %s"),*Name);
+	//UE_LOG(LogTemp, Display, TEXT("Configured Moved Distance : %f"),MoveDistance);
 }
 
 // Called every frame
 void AMovingPlatform::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	MovePlatform(DeltaTime);
+	RotatePlatform(DeltaTime);
+}
+
+
+
+void AMovingPlatform::MovePlatform(float DeltaTime){
+	
 
 	//지역 변수임
 	// FVector LocalVector = MyVector;
@@ -32,28 +45,42 @@ void AMovingPlatform::Tick(float DeltaTime)
 
 
 
-	//이 위는 아래 작성하기 전에 사용했음
-
-	//플랫폼 위치를 옮여야 하기 때문에 슴
-		//현재 위치를 가져오고, 로케이션을 가져오며
-	FVector CurrentLocation = GetActorLocation();
-		//벡터 추가하기
-	CurrentLocation = CurrentLocation + (PlatformVelocity * DeltaTime);
-		//로케이션 설정하기
-	SetActorLocation(CurrentLocation);
-
-	
-	//플랫폼이 너무 멀리가면 되돌려 보내기
-		//얼마나 이동했는지 체크하고
-	float DistanceMoved = FVector::Dist(StartLocation, CurrentLocation); //double값을 반환 값으로 업데이트함
-		//너무 멀리 갔으면 반대로 오게 하기
-	if(DistanceMoved > MoveDistance)
+	if(ShouldPlatformReturn())
 	{
+		//UE_LOG(LogTemp, Display, TEXT("Loging Play : %s"),*Name);
 		FVector MoveDirection = PlatformVelocity.GetSafeNormal();
 		StartLocation = StartLocation + MoveDirection * MoveDirection;
-		SetActorLocation(CurrentLocation);
+		SetActorLocation(StartLocation);
 		PlatformVelocity = -PlatformVelocity;
 	}
-
+	else{
+		FVector CurrentLocation = GetActorLocation();
+		CurrentLocation = CurrentLocation + (PlatformVelocity * DeltaTime);
+		SetActorLocation(CurrentLocation);
+	}
 }
 
+void  AMovingPlatform::RotatePlatform(float DeltaTime)
+{
+	//UE_LOG(LogTemp, Display, TEXT("%s Rotaing..."),*GetName());
+
+	FRotator CurrenRotation = GetActorRotation();
+	//CurrenRotation = CurrenRotation +RotationVelocity * DeltaTime;
+	//SetActorRotation(CurrenRotation);
+	//위 두줄은 로테이션 회전을 시키기에는 오류가 발생할 수 잇는 코드이다. 아래의 코드로 대체됨
+	AddActorLocalRotation(RotationVelocity * DeltaTime);
+	
+}
+
+
+bool AMovingPlatform::ShouldPlatformReturn() const
+{	
+	
+	return GetDistanceMoved() > MoveDistance; 
+}
+
+
+float AMovingPlatform::GetDistanceMoved() const
+{
+	return FVector::Dist(StartLocation, GetActorLocation());
+}

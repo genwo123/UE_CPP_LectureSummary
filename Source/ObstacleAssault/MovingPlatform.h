@@ -27,13 +27,24 @@ public:
 	// UPROPERTY(EditAnywhere)
 	// FVector MyVector = FVector(-13700.0,-3100.0,4056);
 
-	UPROPERTY(EditAnywhere, Category="Boving Platform")
+private:
+	//private 추가
+
+	UPROPERTY(EditAnywhere, Category="Moving")
 	FVector PlatformVelocity = FVector(100,0,0);
 
-	UPROPERTY(EditAnywhere, Category="Boving Platform")
+	UPROPERTY(EditAnywhere, Category="Moving")
 	float MoveDistance = 500;
-
-
-
 	FVector StartLocation;
+
+	UPROPERTY(EditAnywhere, Category="Rotation")
+	FRotator RotationVelocity;
+
+
+	void MovePlatform(float DeltaTime);
+	void RotatePlatform(float DeltaTime);
+
+
+	bool ShouldPlatformReturn() const;
+	float GetDistanceMoved() const;
 };
