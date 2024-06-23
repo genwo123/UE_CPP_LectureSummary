@@ -71,8 +71,6 @@ Saved/*
 Intermediate/*
 Plugins/*/Intermediate/*
 
-#일단 이거ㅏ 빼고 해보자
-Content/MedievalDungeon/*
 # Cache files for the editor to use
 DerivedDataCache/*
 
