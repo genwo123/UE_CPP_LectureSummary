@@ -17,8 +17,9 @@ public:
 
 
 protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
+	void RotateTurret(FVector LookAtTarget);
+	void Fire();
+
 
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly,Category = "Components", meta = (AllowPrivateAccess = "true"))
@@ -40,10 +41,6 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite,Category = "Super Duper", meta = (AllowPrivateAccess = "true"))
 	int32 VisibleAnywhereInt = 12;
 
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
 
-	// Called to bind functionality to input
 
 };
