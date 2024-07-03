@@ -32,7 +32,7 @@ private:
 	UStaticMeshComponent* TurretMesh;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly,Category = "Components", meta = (AllowPrivateAccess = "true"))
-	UStaticMeshComponent* ProjetileSpawnPoint;
+	UStaticMeshComponent* ProjectileSpawnPoint;
 
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Super Duper",meta = (AllowPrivateAccess = "true"))
@@ -40,6 +40,9 @@ private:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite,Category = "Super Duper", meta = (AllowPrivateAccess = "true"))
 	int32 VisibleAnywhereInt = 12;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Combat")
+	TSubclassOf<class AProjectile> ProjectileClass;
 
 
 
