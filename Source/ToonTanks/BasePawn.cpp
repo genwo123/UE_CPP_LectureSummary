@@ -5,6 +5,8 @@
 #include "Components/CapsuleComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Projectile.h"
+#include "Particles/ParticleSystemComponent.h"
+
 
 // Sets default values
 ABasePawn::ABasePawn()
@@ -26,28 +28,31 @@ ABasePawn::ABasePawn()
 
 }
 
-
+void ABasePawn::HandleDestruction()
+{
+	// TODO : 비주얼/사운드 이펙트
+	if (DeathParticles)
+	{
+		UGameplayStatics::SpawnEmitterAtLocation(this, DeathParticles, GetActorLocation(), GetActorRotation());
+	}
+	if (DeathSound)
+	{
+		UGameplayStatics::PlaySoundAtLocation(this, DeathSound, GetActorLocation());
+	}
+	if (DeathCameraShakeClass)
+		{
+			// UE 4.25 - ClientPlayCameraShake; UE 4.26+ ClientStartCameraShake
+			GetWorld()->GetFirstPlayerController()->ClientStartCameraShake(DeathCameraShakeClass);
+		}
+	
+}
 
 void ABasePawn::RotateTurret(FVector LookAtTarget)
 {
-	//Yaw 값만 변경하기 위한 방법들
-	// 첫번째 방법
-	// LookAtRotation.Pitch = 0.f;
-	// LookAtRotation.Roll = 0.f;
-
-	// 두번째 방법
-	//FRotator(0.f, ToTarget.Rotation().Yaw, 0.f);
 	FVector ToTarget = LookAtTarget - TurretMesh->GetComponentLocation();
 	FRotator LookAtRotation = FRotator(0.f, ToTarget.Rotation().Yaw, 0.f);
+	TurretMesh->SetWorldRotation(LookAtRotation);
 
-
-	TurretMesh->SetWorldRotation(
-		FMath::RInterpTo(
-			TurretMesh->GetComponentRotation(),
-			LookAtRotation,
-			UGameplayStatics::GetWorldDeltaSeconds(this),
-			5.f) //수치가 높을수록 빠르게 보간됨
-		);
 }
 
 
@@ -58,4 +63,5 @@ void ABasePawn::Fire()
 
 	auto Projectile = GetWorld()->SpawnActor<AProjectile>(ProjectileClass, Location, Rotation);
 	Projectile->SetOwner(this);
+
 }
